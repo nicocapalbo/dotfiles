@@ -1,22 +1,25 @@
 #!/bin/bash
 set -euo pipefail
 
-echo "🚀 Starting bootstrap script..."
+# --- Logging helpers ---
+log() { echo -e "\033[1;32m[$(date +'%H:%M:%S')]\033[0m $*"; }
+warn() { echo -e "\033[1;33m⚠️  $*\033[0m"; }
+err() { echo -e "\033[1;31m❌ Error: $*\033[0m" >&2; exit 1; }
 
-# Helper to print errors
-err() {
-  echo "❌ Error: $*" >&2
-  exit 1
-}
+log "🚀 Starting bootstrap script..."
 
-# Check if a command exists
-command_exists() {
-  command -v "$1" >/dev/null 2>&1
-}
+# --- Command existence check ---
+command_exists() { command -v "$1" >/dev/null 2>&1; }
 
-# Install Zsh if missing
+# --- Homebrew auto-install on macOS ---
+if [[ "$(uname)" == "Darwin" ]] && ! command_exists brew; then
+  log "🔧 Installing Homebrew..."
+  NONINTERACTIVE=1 /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+fi
+
+# --- Install Zsh if missing ---
 if ! command_exists zsh; then
-  echo "🔧 Installing zsh..."
+  log "🔧 Installing zsh..."
   if command_exists apt; then
     sudo apt update && sudo apt install -y zsh
   elif command_exists brew; then
@@ -25,12 +28,12 @@ if ! command_exists zsh; then
     err "No known package manager to install zsh"
   fi
 else
-  echo "✅ zsh already installed"
+  log "✅ zsh already installed"
 fi
 
-# Install Git if missing (needed for plugins)
+# --- Install Git if missing ---
 if ! command_exists git; then
-  echo "🔧 Installing git..."
+  log "🔧 Installing git..."
   if command_exists apt; then
     sudo apt update && sudo apt install -y git
   elif command_exists brew; then
@@ -39,12 +42,12 @@ if ! command_exists git; then
     err "No known package manager to install git"
   fi
 else
-  echo "✅ git already installed"
+  log "✅ git already installed"
 fi
 
-# Install curl if missing (needed for Oh My Zsh install)
+# --- Install curl if missing ---
 if ! command_exists curl; then
-  echo "🔧 Installing curl..."
+  log "🔧 Installing curl..."
   if command_exists apt; then
     sudo apt update && sudo apt install -y curl
   elif command_exists brew; then
@@ -53,46 +56,61 @@ if ! command_exists curl; then
     err "No known package manager to install curl"
   fi
 else
-  echo "✅ curl already installed"
+  log "✅ curl already installed"
+fi
+
+# --- OS check ---
+if [[ "$(uname)" != "Darwin" && "$(uname)" != "Linux" ]]; then
+  err "Unsupported OS: $(uname)"
 fi
 
 ZSH_DIR="${ZSH:-$HOME/.oh-my-zsh}"
 
-# Install Oh My Zsh if missing
+# --- Backup .zshrc if Oh My Zsh is being installed ---
+if [ ! -s "$ZSH_DIR/oh-my-zsh.sh" ] && [ -f "$HOME/.zshrc" ]; then
+  warn "Backing up existing .zshrc to .zshrc.pre-oh-my-zsh"
+  cp "$HOME/.zshrc" "$HOME/.zshrc.pre-oh-my-zsh"
+fi
+
+# --- Install Oh My Zsh if missing ---
 if [ ! -s "$ZSH_DIR/oh-my-zsh.sh" ]; then
-  echo "📦 Installing Oh My Zsh..."
+  log "📦 Installing Oh My Zsh..."
   export RUNZSH=no
   export CHSH=no
   sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
 else
-  echo "✅ Oh My Zsh already installed"
+  log "✅ Oh My Zsh already installed"
 fi
 
 ZSH_CUSTOM="${ZSH_CUSTOM:-$ZSH_DIR/custom}"
 
-# Clone zsh-autosuggestions plugin
-if [ ! -d "$ZSH_CUSTOM/plugins/zsh-autosuggestions" ]; then
-  echo "📥 Cloning zsh-autosuggestions..."
-  git clone https://github.com/zsh-users/zsh-autosuggestions "$ZSH_CUSTOM/plugins/zsh-autosuggestions"
-else
-  echo "✅ zsh-autosuggestions already installed"
-fi
+# --- Plugin update-or-clone helper ---
+update_or_clone() {
+  local repo="$1"
+  local dest="$2"
+  if [ -d "$dest/.git" ]; then
+    log "🔄 Updating $(basename "$dest")..."
+    git -C "$dest" pull --ff-only
+  else
+    log "📥 Cloning $(basename "$dest")..."
+    git clone "$repo" "$dest"
+  fi
+}
 
-# Clone zsh-syntax-highlighting plugin
-if [ ! -d "$ZSH_CUSTOM/plugins/zsh-syntax-highlighting" ]; then
-  echo "📥 Cloning zsh-syntax-highlighting..."
-  git clone https://github.com/zsh-users/zsh-syntax-highlighting "$ZSH_CUSTOM/plugins/zsh-syntax-highlighting"
-else
-  echo "✅ zsh-syntax-highlighting already installed"
-fi
+update_or_clone "https://github.com/zsh-users/zsh-autosuggestions" "$ZSH_CUSTOM/plugins/zsh-autosuggestions"
+update_or_clone "https://github.com/zsh-users/zsh-syntax-highlighting" "$ZSH_CUSTOM/plugins/zsh-syntax-highlighting"
 
-# Set zsh as default shell if not already
-CURRENT_SHELL=$(basename "$SHELL")
+# --- Set zsh as default shell if not already (interactive only) ---
+CURRENT_SHELL="$(basename "${SHELL:-}")"
 if [ "$CURRENT_SHELL" != "zsh" ]; then
-  echo "⚙️ Changing default shell to zsh..."
-  chsh -s "$(command -v zsh)"
+  if [[ -t 1 ]]; then
+    log "⚙️ Changing default shell to zsh..."
+    chsh -s "$(command -v zsh)"
+  else
+    warn "Not running in an interactive shell; skipping chsh."
+  fi
 else
-  echo "✅ zsh is already the default shell"
+  log "✅ zsh is already the default shell"
 fi
 
-echo "🎉 Bootstrap script completed successfully!"
+log "🎉 Bootstrap script completed successfully!"
