@@ -90,10 +90,10 @@ update_or_clone() {
   local dest="$2"
   if [ -d "$dest/.git" ]; then
     log "🔄 Updating $(basename "$dest")..."
-    git -C "$dest" pull --ff-only
+    git -C "$dest" pull --ff-only >/dev/null 2>&1
   else
     log "📥 Cloning $(basename "$dest")..."
-    git clone "$repo" "$dest"
+    git clone "$repo" "$dest" >/dev/null 2>&1
   fi
 }
 
