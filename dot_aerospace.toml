@@ -211,6 +211,7 @@ automatically-unhide-macos-hidden-apps = true
     up = 'volume up'
     shift-down = ['volume set 0', 'mode main']
 
+# Custom resize for Lystos web development
 [mode.resize.binding]
     esc = ['mode main']
     alt-l = 'resize width 1368'
