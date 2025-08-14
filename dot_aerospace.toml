@@ -222,6 +222,8 @@ run = 'layout floating'
     alt-l = 'resize width 1368'
 
 
+# Assign applications to workspaces.
+# See: https://nikitabobko.github.io/AeroSpace/guide#assign-applications-to-workspaces
 [[on-window-detected]]
 if.app-id = 'com.figma.Desktop'
 run = 'move-node-to-workspace F'
