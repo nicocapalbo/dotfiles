@@ -113,7 +113,7 @@ fi
 alias zshconfig="code ~/.zshrc"
 alias ohmyzshconfig="code ~/.oh-my-zsh"
 # alias bup="brew update && brew upgrade && brew cleanup"
-alias bup="brew update && brew upgrade && brew upgrade --cask --greedy && brew cleanup"
+alias bup="brew update && brew upgrade && brew upgrade --cask --greedy && brew cleanup --prune=all && brew doctor"
 alias speed="speedtest --secure | tee -a ~/Documents/speedtest.log"
 alias npmrd="npm run dev"
 
