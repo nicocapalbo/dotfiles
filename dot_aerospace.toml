@@ -186,6 +186,10 @@ run = 'layout floating'
     # alt-shift-y = 'move-node-to-workspace Y'
     # alt-shift-z = 'move-node-to-workspace Z'
 
+
+    cmd-h = [] # Disable "hide application"
+    cmd-alt-h = [] # Disable "hide others"
+
     # See: https://nikitabobko.github.io/AeroSpace/commands#workspace-back-and-forth
     alt-tab = 'workspace-back-and-forth'
     # See: https://nikitabobko.github.io/AeroSpace/commands#move-workspace-to-monitor
