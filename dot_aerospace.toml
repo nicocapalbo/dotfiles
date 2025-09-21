@@ -105,15 +105,15 @@ run = 'layout floating'
     alt-comma = 'layout accordion horizontal vertical'
 
     # See: https://nikitabobko.github.io/AeroSpace/commands#focus
-    alt-h = 'focus left'
-    alt-j = 'focus down'
-    alt-k = 'focus up'
+    alt-j = 'focus left'
+    alt-k = 'focus down'
+    alt-i = 'focus up'
     alt-l = 'focus right'
 
     # See: https://nikitabobko.github.io/AeroSpace/commands#move
-    alt-shift-h = 'move left'
-    alt-shift-j = 'move down'
-    alt-shift-k = 'move up'
+    alt-shift-j = 'move left'
+    alt-shift-k = 'move down'
+    alt-shift-i = 'move up'
     alt-shift-l = 'move right'
 
     # See: https://nikitabobko.github.io/AeroSpace/commands#resize
@@ -137,7 +137,7 @@ run = 'layout floating'
     # alt-e = 'workspace E'
     alt-f = 'workspace F'
     alt-g = 'workspace G'
-    alt-i = 'workspace I'
+    # alt-i = 'workspace I'
     alt-m = 'workspace M'
     # alt-n = 'workspace N'
     # alt-o = 'workspace O'
@@ -150,7 +150,7 @@ run = 'layout floating'
     # alt-v = 'workspace V'
     # alt-w = 'workspace W'
     # alt-x = 'workspace X'
-    # alt-y = 'workspace Y'
+    alt-y = 'workspace Y'
     # alt-z = 'workspace Z'
 
     # See: https://nikitabobko.github.io/AeroSpace/commands#move-node-to-workspace
@@ -170,7 +170,7 @@ run = 'layout floating'
     # alt-shift-e = 'move-node-to-workspace E'
     alt-shift-f = 'move-node-to-workspace F'
     alt-shift-g = 'move-node-to-workspace G'
-    alt-shift-i = 'move-node-to-workspace I'
+    # alt-shift-i = 'move-node-to-workspace I'
     alt-shift-m = 'move-node-to-workspace M'
     # alt-shift-n = 'move-node-to-workspace N'
     # alt-shift-o = 'move-node-to-workspace O'
@@ -183,7 +183,7 @@ run = 'layout floating'
     # alt-shift-v = 'move-node-to-workspace V'
     # alt-shift-w = 'move-node-to-workspace W'
     # alt-shift-x = 'move-node-to-workspace X'
-    # alt-shift-y = 'move-node-to-workspace Y'
+    alt-shift-y = 'move-node-to-workspace Y'
     # alt-shift-z = 'move-node-to-workspace Z'
 
 
@@ -198,7 +198,7 @@ run = 'layout floating'
     # See: https://nikitabobko.github.io/AeroSpace/commands#mode
     alt-shift-semicolon = 'mode service'
 
-    alt-shift-equal = 'mode resize'
+    alt-shift-n = 'mode resize'
 
 # 'service' binding mode declaration.
 # See: https://nikitabobko.github.io/AeroSpace/guide#binding-modes
@@ -206,24 +206,24 @@ run = 'layout floating'
     esc = ['reload-config', 'mode main']
     r = ['flatten-workspace-tree', 'mode main'] # reset layout
     f = ['layout floating tiling', 'mode main'] # Toggle between floating and tiling layout
-    backspace = ['close-all-windows-but-current', 'mode main']
+    #backspace = ['close-all-windows-but-current', 'mode main']
 
     # sticky is not yet supported https://github.com/nikitabobko/AeroSpace/issues/2
     #s = ['layout sticky tiling', 'mode main']
 
-    alt-shift-h = ['join-with left', 'mode main']
-    alt-shift-j = ['join-with down', 'mode main']
-    alt-shift-k = ['join-with up', 'mode main']
+    alt-shift-j = ['join-with left', 'mode main']
+    alt-shift-k = ['join-with down', 'mode main']
+    alt-shift-i = ['join-with up', 'mode main']
     alt-shift-l = ['join-with right', 'mode main']
 
-    down = 'volume down'
-    up = 'volume up'
-    shift-down = ['volume set 0', 'mode main']
+    #down = 'volume down'
+    #up = 'volume up'
+    #shift-down = ['volume set 0', 'mode main']
 
 # Custom resize for Lystos web development
 [mode.resize.binding]
     esc = ['mode main']
-    alt-l = 'resize width 1368'
+    alt-n = 'resize width 1368'
 
 
 # Assign applications to workspaces.
@@ -246,7 +246,7 @@ run = 'move-node-to-workspace T'
 
 [[on-window-detected]]
 if.app-id = 'com.jetbrains.intellij'
-run = 'move-node-to-workspace I'
+run = 'move-node-to-workspace Y'
 
 [[on-window-detected]]
 if.app-id = 'com.openai.chat'
